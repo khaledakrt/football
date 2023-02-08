@@ -1,0 +1,569 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+	int Id_equipe[16];
+	char nom_equipe[16][10] ;
+	char couleur_equipe[16][10];
+
+	char equipe_elimener_8[8][10];
+	char equipe_gagner_8[8][10];
+
+	char equipe_elimener_4[4][10];
+	char equipe_gagner_4[4][10];
+
+	char equipe_elimener_2[2][10];
+	char equipe_gagner_2[2][10];
+
+	char equipe_gagner[];
+	char equipe_2_eme_place[];
+
+	int niveau_de_jeux = 8 ;
+	//int tirage_equipe[];
+
+	int tirage16[16];
+	int tirage8[8];
+	int tirage4[4];
+	int score16[16];
+	int score8[8];
+	int score4[4];
+	int score2[2];
+
+	int saisi_equipe = 0;
+
+
+int tirage_au_sort(int nombre_equipe);
+void menu();
+void matchs(int niveau);
+void saisir_equipe();
+void affichage_equipe_participant();
+void affichage_equipe_eliminer();
+void equipe_encore_dans_le_coupe();
+void classement_des_equipes();
+
+int main() {
+
+	menu();
+	return 0;
+
+}
+
+void menu()
+{
+	int choix ;
+	int niveau ;
+
+	printf("   MENU \n");
+	printf("          Entre liste des equipe                               Organisation des matchs  \n");
+	printf("                    1                                                       2 \n\n\n");
+	printf("         Affiche liste des equipe                           Afficher les equipes elimines  \n");
+	printf("                    3                                                       4 \n\n\n");
+	printf(" Afficher les equipes encore dans le coupe                Afficher le classement des equipes  \n");
+	printf("                    5                                                       6 \n\n\n");
+	printf("                                               Quitter  \n");
+	printf("                                                  7  \n\n\n");
+
+	printf(" Saisir un choix \n");
+	scanf("%i",&choix);
+
+	if((choix == 1)&&(saisi_equipe != 1))
+	{
+		printf("\n Merci de saisir les epuipes (Nom, Couleur, Id est genere automatiquement) \n\n");
+		saisir_equipe();
+	}
+	else if(choix == 2)
+	{
+		matchs(niveau_de_jeux);
+	}
+	else if(choix == 3) affichage_equipe_participant();
+	else if(choix == 4) affichage_equipe_eliminer();
+	else if(choix == 5) equipe_encore_dans_le_coupe();
+	else if(choix == 6) classement_des_equipes();
+	else if(choix == 7) printf("choix pas encore \n");
+	else
+	{
+		menu();
+	}
+
+}
+void saisir_equipe()
+{
+	int i,j;
+	for(i = 0; i<16;i++)
+	{
+		printf("entre nom equipe %i \n",(i+1));
+		scanf("%s",&nom_equipe[i]);
+		printf("entrer couleur equipe %i \n",(i+1));
+		scanf("%s",&couleur_equipe[i]);
+		printf("l'identifiant de cet equipe est %i \n",(i+1));
+		Id_equipe[i] = i+1;
+		if(i>=1)
+		{
+			j=0;
+			while(j<i)
+			{
+
+				j++;
+					if(strcmp(nom_equipe[i],nom_equipe[j-1]) == 0 )
+					{
+						printf("merci de changer le nom de l equipe %i \n",(i+1));
+						scanf("%s",&nom_equipe[i]);
+						j = 0;
+					}
+					if(strcmp(couleur_equipe[i],couleur_equipe[j-1]) == 0 )
+					{
+						printf("merci de changer le couleur de l equipe %i \n",(i+1));
+						scanf("%s",&couleur_equipe[i]);
+						j = 0;
+					}
+
+
+			}
+		}
+	}
+	printf(" Vos equipes sont bien saisi\n");
+	saisi_equipe = 1;
+	menu();
+}
+
+void matchs(int niveau)
+{
+	int i,j;
+	srand(time(0));
+	if (niveau == 8)
+	{
+		printf("\n vous etes dans le 1/8 de finale \n\n");
+		tirage_au_sort(16);
+		printf("\nVoici les matchs qui se deroule dans le 1/8 finale\n\n");
+		for(i=0,j=0;i<16,j<8;i= i+2,j++)
+		{
+			printf("match %i : %s vs %s \n",(j+1),(nom_equipe[tirage16[i]-1]),(nom_equipe[tirage16[i+1]-1]));
+		}
+		printf("\n");
+		for(i=0,j=0;i<16,j<8;i= i+2,j++)
+		{
+			printf("Pour le match %i : %s vs %s merci de saisi les scores \n",(j+1),(nom_equipe[tirage16[i]-1]),(nom_equipe[tirage16[i+1]-1]));
+			printf("Score de l equipe %s : ",(nom_equipe[tirage16[i]-1]));
+			scanf("%i",&score16[i]);
+			printf("Score de l equipe %s : ",(nom_equipe[tirage16[i+1]-1]));
+			scanf("%i",&score16[i+1]);
+		}
+		for(i=0,j=0;i<16,j<8;i=i+2,j++)
+		{
+			printf("les scores de la match %i est %s = %i et %s = %i \n",(j+1),nom_equipe[tirage16[i]-1],(score16[i]),nom_equipe[tirage16[i+1]-1],(score16[i+1]));
+		}
+		for(i=0,j=0;i<16,j<8;i=i+2,j++)
+		{
+			if(score16[i] > score16[i+1])
+			{
+				strcpy(equipe_gagner_8[j],nom_equipe[tirage16[i]-1]);
+				strcpy (equipe_elimener_8[j],nom_equipe[tirage16[i+1]-1]);
+			}
+			else
+			{
+				strcpy(equipe_gagner_8[j],nom_equipe[tirage16[i+1]-1]);
+				strcpy (equipe_elimener_8[j],nom_equipe[tirage16[i]-1]);
+			}
+		}
+		niveau_de_jeux = 4 ;
+	}
+	else if(niveau == 4)
+	{
+		printf("\n vous etes dans le 1/4 de finale \n\n");
+		tirage_au_sort(8);
+		printf("Voici les matchs qui se deroule dans le 1/4 finale\n\n");
+		for(i=0,j=0;i<8,j<4;i= i+2,j++)
+		{
+			printf("match %i : %s vs %s \n",(j+1),(equipe_gagner_8[tirage8[i]-1]),(equipe_gagner_8[tirage8[i+1]-1]));
+		}
+		printf("\n");
+		for(i=0,j=0;i<8,j<4;i= i+2,j++)
+		{
+			printf("Pour le match %i : %s vs %s merci de saisi les scores \n",(j+1),(equipe_gagner_8[tirage8[i]-1]),(equipe_gagner_8[tirage8[i+1]-1]));
+			printf("Score de l equipe %s : ",(equipe_gagner_8[tirage8[i]-1]));
+			scanf("%i",&score8[i]);
+			printf("Score de l equipe %s : ",(equipe_gagner_8[tirage8[i+1]-1]));
+			scanf("%i",&score8[i+1]);
+		}
+		for(i=0,j=0;i<8,j<4;i=i+2,j++)
+		{
+			printf("les scores de la match %i est %s = %i et %s = %i \n",(j+1),equipe_gagner_8[tirage8[i]-1],(score8[i]),equipe_gagner_8[tirage8[i+1]-1],(score8[i+1]));
+		}
+		for(i=0,j=0;i<8,j<4;i=i+2,j++)
+		{
+			if(score8[i] > score8[i+1])
+			{
+				strcpy(equipe_gagner_4[j],equipe_gagner_8[tirage8[i]-1]);
+				strcpy (equipe_elimener_4[j],equipe_gagner_8[tirage8[i+1]-1]);
+			}
+			else
+			{
+				strcpy(equipe_gagner_4[j],equipe_gagner_8[tirage8[i+1]-1]);
+				strcpy (equipe_elimener_4[j],equipe_gagner_8[tirage8[i]-1]);
+			}
+		}
+		niveau_de_jeux = 2 ;
+	}
+	else if(niveau == 2)
+	{
+		printf("\n vous etes dans le 1/2 de finale \n\n");
+		tirage_au_sort(4);
+		printf("Voici les matchs qui se deroule dans le 1/2 finale\n\n");
+		for(i=0,j=0;i<4,j<2;i= i+2,j++)
+		{
+			printf("match %i : %s vs %s \n",(j+1),(equipe_gagner_4[tirage4[i]-1]),(equipe_gagner_4[tirage4[i+1]-1]));
+		}
+		printf("\n");
+		for(i=0,j=0;i<4,j<2;i= i+2,j++)
+		{
+			printf("Pour le match %i : %s vs %s merci de saisi les scores \n",(j+1),(equipe_gagner_4[tirage4[i]-1]),(equipe_gagner_4[tirage4[i+1]-1]));
+			printf("Score de l equipe %s : ",(equipe_gagner_4[tirage4[i]-1]));
+			scanf("%i",&score4[i]);
+			printf("Score de l equipe %s : ",(equipe_gagner_4[tirage4[i+1]-1]));
+			scanf("%i",&score4[i+1]);
+		}
+		for(i=0,j=0;i<4,j<2;i=i+2,j++)
+		{
+			printf("les scores de la match %i est %s = %i et %s = %i \n",(j+1),equipe_gagner_4[tirage4[i]-1],(score4[i]),equipe_gagner_4[tirage4[i+1]-1],(score4[i+1]));
+		}
+		for(i=0,j=0;i<4,j<2;i=i+2,j++)
+		{
+			if(score4[i] > score4[i+1])
+			{
+				strcpy(equipe_gagner_2[j],equipe_gagner_4[tirage4[i]-1]);
+				strcpy (equipe_elimener_2[j],equipe_gagner_4[tirage4[i+1]-1]);
+			}
+			else
+			{
+				strcpy(equipe_gagner_2[j],equipe_gagner_4[tirage4[i+1]-1]);
+				strcpy (equipe_elimener_2[j],equipe_gagner_4[tirage4[i]-1]);
+			}
+		}
+		niveau_de_jeux = 1 ;
+	}
+	else if(niveau == 1)
+	{
+		printf("\n vous etes dans le finale \n\n");
+		printf("Voici le matchs qui se deroule dans le finale\n\n");
+		printf("match de finale : %s vs %s \n",(equipe_gagner_2[0]),(equipe_gagner_2[1]));
+		printf("\n");
+		printf("Pour le match de finale: %s vs %s merci de saisi les scores \n",(equipe_gagner_2[0]),(equipe_gagner_2[1]));
+		printf("Score de l equipe %s : ",(equipe_gagner_2[0]));
+		scanf("%i",&score2[0]);
+		printf("Score de l equipe %s : ",(equipe_gagner_2[1]));
+		scanf("%i",&score2[1]);
+		printf("les scores de le match de finale est %s = %i et %s = %i \n",equipe_gagner_2[0],(score2[0]),equipe_gagner_2[1],(score2[1]));
+		if(score2[0] > score2[1])
+		{
+			strcpy(equipe_gagner,equipe_gagner_2[0]);
+			strcpy(equipe_2_eme_place,equipe_gagner_2[1]);
+		}
+		else if (score2[0] < score2[1])
+		{
+			strcpy(equipe_gagner,equipe_gagner_2[1]);
+			strcpy(equipe_2_eme_place,equipe_gagner_2[0]);
+		}
+
+		printf("\n\n\n le coupe est terminer\n\n");
+		printf("\n\n\n       1-eme place\n\n");
+        printf(" |  |   equipe %s    |  |  \n",equipe_gagner);
+
+		niveau_de_jeux = 0 ;
+	}
+	else
+	{
+		printf("\n le coupe est terminer\n\n");
+		menu();
+	}
+	menu();
+}
+int tirage_au_sort(int nombre_equipe)
+{
+	int i,j;
+	srand(time(0));
+	if(nombre_equipe == 16)
+	{
+		for(i=0;i<nombre_equipe;i++)
+		{
+			tirage16[i] = rand() % (nombre_equipe+1);
+			if(i>0)
+			{
+				j=0;
+				while(j<i)
+				{
+					if((tirage16[i] == tirage16[j]) || (tirage16[i] == 0))
+					{
+						tirage16[i] = rand() % (nombre_equipe+1);
+						j=0;
+					}
+					else
+						j++;
+		    	}
+			}
+		}
+		for(i=0;i<nombre_equipe;i++)
+		{
+			return tirage16[i] ;
+		}
+	}
+	else if (nombre_equipe == 8)
+	{
+		for(i=0;i<nombre_equipe;i++)
+		{
+			tirage8[i] = rand() % (nombre_equipe+1);
+			if(i>0)
+			{
+				j=0;
+				while(j<i)
+				{
+					if((tirage8[i] == tirage8[j]) || (tirage8[i] == 0))
+					{
+						tirage8[i] = rand() % (nombre_equipe+1);
+						j=0;
+					}
+					else
+						j++;
+		    	}
+			}
+		}
+		for(i=0;i<nombre_equipe;i++)
+		{
+			return tirage8[i] ;
+		}
+	}
+	else if (nombre_equipe == 4)
+	{
+		for(i=0;i<nombre_equipe;i++)
+		{
+			tirage4[i] = rand() % (nombre_equipe+1);
+			if(i>0)
+			{
+				j=0;
+				while(j<i)
+				{
+					if((tirage4[i] == tirage4[j]) || (tirage4[i] == 0))
+					{
+						tirage4[i] = rand() % (nombre_equipe+1);
+						j=0;
+					}
+					else
+						j++;
+		    	}
+			}
+		}
+		for(i=0;i<nombre_equipe;i++)
+		{
+			return tirage4[i] ;
+		}
+	}
+}
+void affichage_equipe_participant()
+{
+	int i ;
+	printf("Voila la liste du participants\n\n");
+	for(i = 0;i<16;i++)
+		{
+			printf("l'equipe de Id : %i est : %s avec le couleur : %s \n",(Id_equipe[i]),(nom_equipe[i]),(couleur_equipe[i]));
+		}
+	printf(" Si vous avez retour au MENU meci de tapez *\n");
+	menu();
+}
+void affichage_equipe_eliminer()
+{
+	int i ;
+	if(niveau_de_jeux == 8)
+	{
+		printf("les matchs n'ont pas lance jusqu'a maintenant\n\n");
+		menu();
+	}
+	else if (niveau_de_jeux == 4)
+	{
+		printf("les equipes eliminers en 8-eme finale sont : \n\n");
+		for(i = 0;i<8;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_8[i]));
+		}
+		menu();
+	}
+	else if(niveau_de_jeux == 2)
+	{
+		printf("les equipes eliminers en 8-eme finale sont : \n\n");
+		for(i = 0;i<8;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_8[i]));
+		}
+		printf("\nles equipes eliminers en 4-eme finale sont : \n\n");
+		for(i = 0;i<4;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_4[i]));
+		}
+		menu();
+	}
+	else if(niveau_de_jeux == 1)
+	{
+		printf("les equipes eliminers en 8-eme finale sont : \n\n");
+		for(i = 0;i<8;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_8[i]));
+		}
+		printf("\nles equipes eliminers en 4-eme finale sont : \n\n");
+		for(i = 0;i<4;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_4[i]));
+		}
+		printf("\nles equipes eliminers en 2-eme finale sont : \n\n");
+		for(i = 0;i<2;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_2[i]));
+		}
+		menu();
+	}
+	else if(niveau_de_jeux == 0)
+	{
+		printf("les equipes eliminers en 8-eme finale sont : \n\n");
+		for(i = 0;i<8;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_8[i]));
+		}
+		printf("\nles equipes eliminers en 4-eme finale sont : \n\n");
+		for(i = 0;i<4;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_4[i]));
+		}
+		printf("\nles equipes eliminers en 2-eme finale sont : \n\n");
+		for(i = 0;i<2;i++)
+		{
+			printf("l'equipe de Id : %i est : %s \n", i+1 ,(equipe_elimener_2[i]));
+		}
+		printf("\nl'equipes eliminer en finale est : \n\n");
+		printf("l'equipe %s \n",(equipe_2_eme_place));
+		menu();
+	}
+}
+void equipe_encore_dans_le_coupe()
+{
+	int i ;
+	if(niveau_de_jeux == 8)
+	{
+		printf("  Tous les equipes sont encore dans le coupe \n\n");
+		affichage_equipe_participant();
+		menu();
+	}
+	else if(niveau_de_jeux == 4)
+	{
+		printf("les equipes encore dans le coupe sont : \n\n");
+		for(i=0;i<8;i++)
+		{
+			printf("l'equipe %i est %s \n",i+1,(equipe_gagner_8[i]));
+		}
+		menu();
+	}
+	else if(niveau_de_jeux == 2)
+	{
+		printf("les equipes encore dans le coupe sont : \n\n");
+		for(i=0;i<4;i++)
+		{
+			printf("l'equipe %i est %s \n",i+1,(equipe_gagner_4[i]));
+		}
+		menu();
+	}
+	else if(niveau_de_jeux == 1)
+	{
+		printf("les equipes encore dans le coupe sont : \n\n");
+		for(i=0;i<2;i++)
+		{
+			printf("l'equipe %i est %s \n",i+1,(equipe_gagner_2[i]));
+		}
+		menu();
+	}
+	else if(niveau_de_jeux == 0)
+	{
+		printf("le coupe est termine et voici l'equipe gagnante : \n\n");
+		printf("l'equipe gagnante est %s \n",equipe_gagner);
+		printf("\n\n\n       1-eme place\n\n");
+printf("                         |  |   equipe %s    |  |  \n",equipe_gagner);
+
+		menu();
+	}
+}
+void classement_des_equipes()
+{
+	int i ;
+	if(niveau_de_jeux == 8)
+	{
+		printf("  Pas de classement pour le moment \n\n");
+		affichage_equipe_participant();
+		menu();
+	}
+	else if(niveau_de_jeux == 4)
+	{
+		printf("\n5-eme place\n");
+		for(i = 0;i<8;i++)
+		{
+			printf("%s\t",(equipe_elimener_8[i]));
+		}
+		printf("\n\n");
+		menu();
+	}
+	else if(niveau_de_jeux == 2)
+	{
+		printf("\n5-eme place\n");
+		for(i = 0;i<8;i++)
+		{
+			printf("%s\t",(equipe_elimener_8[i]));
+		}
+		printf("\n4-eme place\n");
+		for(i = 0;i<4;i++)
+		{
+			printf("%s\t",(equipe_elimener_4[i]));
+		}
+		printf("\n\n");
+		menu();
+	}
+	else if(niveau_de_jeux == 1)
+	{
+		printf("\n5-eme place\n");
+		for(i = 0;i<8;i++)
+		{
+			printf("%s\t",(equipe_elimener_8[i]));
+		}
+		printf("\n4-eme place\n");
+		for(i = 0;i<4;i++)
+		{
+			printf("%s\t",(equipe_elimener_4[i]));
+		}
+		printf("\n3-eme place\n");
+		for(i = 0;i<2;i++)
+		{
+			printf("%s\t",(equipe_elimener_2[i]));
+		}
+		printf("\n\n");
+		menu();
+	}
+	else if(niveau_de_jeux == 0)
+	{
+		printf("\n5-eme place\n");
+		for(i = 0;i<8;i++)
+		{
+			printf("%s\t",(equipe_elimener_8[i]));
+		}
+		printf("\n4-eme place\n");
+		for(i = 0;i<4;i++)
+		{
+			printf("%s\t",(equipe_elimener_4[i]));
+		}
+		printf("\n3-eme place\n");
+		for(i = 0;i<2;i++)
+		{
+			printf("%s\t",(equipe_elimener_2[i]));
+		}
+		printf("\n2-eme place\n");
+		printf("%s\t\n\n",equipe_2_eme_place);
+		printf("\n\n\n       1-eme place\n\n");
+printf(" |  |   equipe %s    |  |  \n",equipe_gagner);
+
+
+		menu();
+}}
+
